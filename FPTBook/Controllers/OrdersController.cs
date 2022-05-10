@@ -31,6 +31,7 @@ namespace FPTBook.Controllers
             var userContext = _context.Order.Where(o => o.UId == thisUserId).Include(o => o.User);
             return View(await userContext.ToListAsync());
         }
+
         [Authorize(Roles = "Seller")]
         public async Task<IActionResult> orderManage()
         {

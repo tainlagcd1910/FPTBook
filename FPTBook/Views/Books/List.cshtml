@@ -6,29 +6,35 @@
 <form asp-action="List" method="get">
     <div class="form-actions no-color">
         <p>
-            Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
-            <input type="submit" value="Search" class="btn btn-default" /> |
-            <a asp-action="List">Back to Full List</a>
+            <input style="width:500px; height: 40px; border-radius:10px" type="text" name="SearchString" placeholder="Enter Author or Title or Category to find" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Search" class="btn button-violet" style=" border: 1px solid; " />
         </p>
     </div>
 </form>
 <div class="container">
-      <div class="row">
-          @for (var i = 0; i < @Model.Count; i++)
-          {
-              <div class="col-md-4 col-6">
-                  <div class="card" style="width: 18rem;">
-                      <img src="@Model[i].ImgUrl" class="card-img-top" alt="...">
-                      <div class="card-body">
-                          <h5 class="card-title">@Model[i].Title</h5>                       
-                           <a asp-action="Details" asp-route-id="@Model[i].Isbn" class="btn btn-primary">Details</a>
-                          <a asp-action="AddToCart" asp-route-isbn="@Model[i].Isbn" class="btn btn-primary">Add to cart</a>
-                      </div>
-                  </div>
-              </div>
-          }
-      </div>
-  </div>
+    <div class="row">
+        @for (var i = 0; i < @Model.Count; i++)
+        {
+            <div class="col-md-4 col-6">
+                <div class="card" style="width: 18rem;">
+                    <img src="@Model[i].ImgUrl" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">@Model[i].Title</h5>
+                        <p class="card-title text-primary">by <b>@Model[i].Author</b></p>
+                        <div style="padding-left:5px;">
+                            <p class=" text-black">Category: @Model[i].Category</p>
+                        </div>
+                        <div style="padding-left:5px;">
+                            <p style="color:maroon">Price: <b class="">$ @Model[i].Price</b></p>
+                        </div>
+                        <a asp-action="Details" asp-route-id="@Model[i].Isbn" class="btn button-violet">Details <i class="fas fa-info-circle"></i></a>
+                        <a asp-action="AddToCart" asp-route-isbn="@Model[i].Isbn" class="btn button-violet">Add to cart <i class="fas fa-cart-plus"></i></a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
 
 <p>
     @ViewBag.message
@@ -46,3 +52,10 @@
         </ul>
     </nav>
 </div>
+<style>
+    .button-violet{
+        color: #fff;
+    background-color: #6b38b6;
+    border-color: #6b38b6;
+    }
+</style>
