@@ -133,10 +133,11 @@ namespace FPTBook.Controllers
         [Authorize(Roles = "Seller")]
         public async Task<IActionResult> Index(int id, string searchString)
         {
+            // dung` de chia sach ra 2 store va quan ly 
             FPTBookUser thisUser = await _userManager.GetUserAsync(HttpContext.User);
             Store thisStore = await _context.Store.FirstOrDefaultAsync(s => s.UId == thisUser.Id);
-            // chia sach
-            var books1 = from b in _context.Book.Where(b => b.StoreId == thisStore.Id)
+            var userContext = _context.Book.Where(b => b.StoreId == thisStore.Id).Include(b => b.Store);
+            var books1 = from b in userContext
                          select b;
             if (!String.IsNullOrEmpty(searchString))
             {
