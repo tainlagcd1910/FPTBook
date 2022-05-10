@@ -11,6 +11,7 @@ using FPTBook.Models;
 using Microsoft.AspNetCore.Identity;
 using FPTBook.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace FPTBook.Controllers
 {
@@ -20,11 +21,13 @@ namespace FPTBook.Controllers
         private readonly int _recordsPerPage = 5;
         private readonly int _recordsPerPages = 20;
         private readonly UserManager<FPTBookUser> _userManager;
+        private readonly IEmailSender _emailSender;
 
-        public BooksController(FPTBookContext context, UserManager<FPTBookUser> userManager)
+        public BooksController(FPTBookContext context, UserManager<FPTBookUser> userManager, IEmailSender emailSender)
         {
             _context = context;
             _userManager = userManager;
+            _emailSender = emailSender;
         }
 
         // GET: Books
@@ -33,7 +36,7 @@ namespace FPTBook.Controllers
         //    var userContext = _context.Book.Include(b => b.Store);
         //    return View(await userContext.ToListAsync());
         //}
-       
+       [AllowAnonymous]
         public async Task<IActionResult> List(int id, string searchString)
         {
             var books1 = from b in _context.Book
@@ -53,10 +56,18 @@ namespace FPTBook.Controllers
                 .ToListAsync();
             return View(books);
         }
+        public async Task<IActionResult> confirmEmail()
+        {
+            await _emailSender.SendEmailAsync("quangvan1210200120@gmail.com", "may da xong", "just test");
+            return RedirectToAction("Index", "Carts");
+        }
+
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> AddToCart(string isbn)
         {
             string thisUserId = _userManager.GetUserId(HttpContext.User);
             Cart myCart = new Cart() { UId = thisUserId, BookIsbn = isbn, Quantity = 1 };
+            // Tao 1 dong` trong cart
             Cart fromDb = _context.Cart.FirstOrDefault(c => c.UId == thisUserId && c.BookIsbn == isbn);
             //if not existing (or null), add it to cart. If already added to Cart before, ignore it.
             if (fromDb != null)
@@ -117,7 +128,7 @@ namespace FPTBook.Controllers
                     Console.WriteLine("Error occurred in Checkout" + ex);
                 }
             }
-            return RedirectToAction("Index", "Carts");
+            return RedirectToAction("confirmEmail");
         }
         [Authorize(Roles = "Seller")]
         public async Task<IActionResult> Index(int id, string searchString)
@@ -141,8 +152,8 @@ namespace FPTBook.Controllers
                 .ToListAsync();
             return View(books);
         }
-       
         // GET: Books/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -160,7 +171,7 @@ namespace FPTBook.Controllers
 
             return View(book);
         }
-        [Authorize(Roles = "Seller")]
+
         // GET: Books/Create
         public IActionResult Create()
         {
@@ -186,7 +197,7 @@ namespace FPTBook.Controllers
                 {
                     image.CopyTo(stream);
                 }
-                book.ImgUrl = "Image/" + ImageName;
+                book.ImgUrl = "img/" + ImageName;
                 FPTBookUser thisUser = await _userManager.GetUserAsync(HttpContext.User);
                 Store thisStore = await _context.Store.FirstOrDefaultAsync(s => s.UId == thisUser.Id);
                 book.StoreId = thisStore.Id;
@@ -201,11 +212,9 @@ namespace FPTBook.Controllers
             ViewData["StoreId"] = new SelectList(_context.Store, "Id", "Id", book.StoreId);
 
             return View(book);
-
         }
-
-        // GET: Books/Edit/5
         [Authorize(Roles = "Seller")]
+        // GET: Books/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -225,7 +234,7 @@ namespace FPTBook.Controllers
         // POST: Books/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]  // connect link
+        [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Seller")]
         public async Task<IActionResult> Edit(string id, [Bind("Isbn,Title,Pages,Author,Category,Price,Desc,ImgUrl")] Book book)
@@ -254,24 +263,18 @@ namespace FPTBook.Controllers
                     _context.Update(bookToUpdate);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException ex)
                 {
-                    if (!BookExists(book.Isbn))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    ModelState.AddModelError("", "Unable to update the change. Error is: " + ex.Message);
                 }
                 return RedirectToAction(nameof(Index));
             }
             ViewData["StoreId"] = new SelectList(_context.Store, "Id", "Id", book.StoreId);
             return View(book);
         }
-        [Authorize(Roles = "Seller")]
+
         // GET: Books/Delete/5
+        [Authorize(Roles = "Seller")]
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -291,9 +294,9 @@ namespace FPTBook.Controllers
         }
 
         // POST: Books/Delete/5
+        [Authorize(Roles = "Seller")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Seller")]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var book = await _context.Book.FindAsync(id);
@@ -314,6 +317,9 @@ namespace FPTBook.Controllers
 
             }
         }
+
+
+
 
         private bool BookExists(string id)
         {

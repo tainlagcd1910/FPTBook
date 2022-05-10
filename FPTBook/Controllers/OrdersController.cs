@@ -32,16 +32,12 @@ namespace FPTBook.Controllers
             return View(await userContext.ToListAsync());
         }
         [Authorize(Roles = "Seller")]
-        public async Task<IActionResult> orderManage( string searchString)
+        public async Task<IActionResult> orderManage()
         {
-            var customer = from c in _userManager.Users
-                         select c;
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                customer = customer.Where(c => c.Email!.Contains(searchString));
-            }
-            var userContext = _context.Order.Include(o => o.User);
+            FPTBookUser thisUser = await _userManager.GetUserAsync(HttpContext.User);
+            Store thisStore = await _context.Store.FirstOrDefaultAsync(s => s.UId == thisUser.Id);
+            OrderDetail thisOrderDetail = _context.OrderDetail.FirstOrDefault(od => od.Book.StoreId == thisStore.Id);
+            var userContext = _context.Order.Where(o=>o.Id==thisOrderDetail.OrderId).Include(o => o.User);
             return View(await userContext.ToListAsync());
         }
 

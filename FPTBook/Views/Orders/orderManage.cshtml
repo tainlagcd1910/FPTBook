@@ -6,15 +6,6 @@
 
 <h1>Index</h1>
 
-<form asp-action="orderManage" method="get">
-    <div class="form-actions no-color">
-        <p>
-            Find by Email: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
-            <input type="submit" value="Search" class="btn btn-default" /> |
-            <a asp-action="orderManage">Back to Full List</a>
-        </p>
-    </div>
-</form>
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -28,7 +19,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Total)
             </th>
-             <th>
+            <th>
                        Actions
             </th>
 

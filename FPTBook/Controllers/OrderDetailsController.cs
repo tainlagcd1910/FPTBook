@@ -27,16 +27,21 @@ namespace FPTBook.Controllers
         }
         [Authorize(Roles = "Customer")]
         // GET: OrderDetails
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int id)
         {
-            string thisUsers = _userManager.GetUserId(HttpContext.User);
-            var fPTBookContext = _context.OrderDetail.Where( o => o.Order.UId== thisUsers).Include(o => o.Book).Include(o => o.Order).Include(o=>o.Order.User);
+            string thisUsersId = _userManager.GetUserId(HttpContext.User);
+            var fPTBookContext = _context.OrderDetail.Where(o => o.Order.UId == thisUsersId && o.OrderId == id)
+                .Include(o => o.Book)
+                .Include(o => o.Order)
+                .Include(o => o.Order.User)
+                .Include(o => o.Book.Store);
+
             return View(await fPTBookContext.ToListAsync());
         }
         [Authorize(Roles = "Seller")]
-        public async Task<IActionResult> orderManager()
+        public async Task<IActionResult> orderManager(int id )
         {
-            var orderManager = _context.OrderDetail.Include(o => o.Book).Include(o => o.Order).Include(o => o.Order.User);
+            var orderManager = _context.OrderDetail.Where(o => o.OrderId == id).Include(o => o.Book).Include(o => o.Order).Include(o => o.Order.User).Include(o => o.Book.Store);
             return View(await orderManager.ToListAsync());
         }
 
