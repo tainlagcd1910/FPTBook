@@ -50,6 +50,7 @@ namespace FPTBook.Controllers
             int numberOfPages = (int)Math.Ceiling((double)numberOfRecords / _recordsPerPages);
             ViewBag.numberOfPages = numberOfPages;
             ViewBag.currentPage = id;
+            ViewBag.numberOfRecords = numberOfRecords;
             List<Book> books = await books1
                 .Skip(id * _recordsPerPages)  //Offset SQL
                 .Take(_recordsPerPages)       //Top SQL
