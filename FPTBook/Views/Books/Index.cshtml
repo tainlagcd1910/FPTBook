@@ -10,11 +10,10 @@
     <a asp-action="Create">Create New</a>
 </p>
 <form asp-action="Index" method="get">
-    <div class="form-actions no-color">
+   <div class="form-actions no-color">
         <p>
-            Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
-            <input type="submit" value="Search" class="btn btn-default" /> |
-            <a asp-action="Index">Back to Full List</a>
+            <input style="width:500px; height: 40px; border-radius:10px" type="text" name="SearchString" placeholder="Enter Author or Title or Category to find" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Search" class="btn button-violet " style=" border: 1px solid; " />
         </p>
     </div>
 </form>
@@ -95,3 +94,10 @@
           </ul>
       </nav>
   </div>
+  <style>
+    .button-violet{
+        color: #fff;
+    background-color: #6b38b6;
+    border-color: #6b38b6;
+    }
+</style>

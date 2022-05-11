@@ -49,15 +49,16 @@
                         @Html.DisplayFor(modelItem => item.Book.Price)
                     </td>
                     <td>
-                        <a asp-action="removeItem" asp-route-isbn="@item.BookIsbn" class="btn btn-primary">-</a>
+                        <a asp-action="removeItem" asp-route-isbn="@item.BookIsbn" class="btn btn-primary"> <i class="fas fa-minus-circle"></i></a>
                         @Html.DisplayFor(modelItem => item.Quantity)
-                        <a asp-action="UpdateCart" asp-route-isbn="@item.BookIsbn" class="btn btn-primary">+</a>
+                        <a asp-action="UpdateCart" asp-route-isbn="@item.BookIsbn" class="btn btn-primary"><i class="fas fa-plus-circle"></i></a>
+                       
                     </td>
                     <td>
                         @(Math.Round((item.Quantity) * (item.Book.Price),1))
                     </td>
                     <td>
-                        <a asp-action="Remove" asp-route-isbn="@item.BookIsbn" class="btn btn-danger">Remove</a>
+                        <a asp-action="Remove" asp-route-isbn="@item.BookIsbn" class="btn btn-danger">Remove <i class="fas fa-trash-alt"></i></a>
                     </td>
                 </tr>
             }
@@ -71,13 +72,20 @@
             </tr>
         </tbody>
     </table>
-    <a asp-controller="Books" class="btn btn-primary" asp-action="Checkout">Checkout</a>
+    <a asp-controller="Books" class="btn button-violet " asp-action="Checkout"> Checkout <i class="fas fa-check-circle"></i></a>
 }
 else
 {
     <p class="alert alert-danger">Cart is Empty</p>
 }
- <a asp-controller="Books" class="btn btn-primary" asp-action="List">Continue Shopping</a>
+ <a asp-controller="Books" class="btn button-violet" asp-action="List">Continue Shopping</a>
 
-    <a asp-controller="Orders" class="btn btn-primary" asp-action="Index">Order History</a>
+    <a asp-controller="Orders" class="btn button-violet" asp-action="Index">Order History</a>
      
+<style>
+    .button-violet{
+        color: #fff;
+    background-color: #6b38b6;
+    border-color: #6b38b6;
+    }
+</style>

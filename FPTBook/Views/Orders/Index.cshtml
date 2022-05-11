@@ -37,10 +37,17 @@
                 </td>
 
                 <td>
-                    <a asp-controller="OrderDetails" asp-action="Index" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
+                    <a asp-controller="OrderDetails" asp-action="Index" asp-route-id="@item.Id" class="btn button-violet">Details <i class="fas fa-info-circle"></i></a>
 
                 </td>
             </tr>
         }
     </tbody>
 </table>
+<style>
+    .button-violet{
+        color: #fff;
+    background-color: #6b38b6;
+    border-color: #6b38b6;
+    }
+</style>
