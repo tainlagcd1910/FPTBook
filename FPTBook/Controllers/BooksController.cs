@@ -59,7 +59,8 @@ namespace FPTBook.Controllers
         }
         public async Task<IActionResult> confirmEmail()
         {
-            await _emailSender.SendEmailAsync("quangvan1210200120@gmail.com", "may da xong", "just test");
+            FPTBookUser thisUser = await _userManager.GetUserAsync(HttpContext.User);
+            await _emailSender.SendEmailAsync(thisUser.Email, "successful purchase", "You have made a successful purchase");
             return RedirectToAction("Index", "Carts");
         }
 
