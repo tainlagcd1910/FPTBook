@@ -213,7 +213,6 @@ namespace FPTBook.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
             ViewData["StoreId"] = new SelectList(_context.Store, "Id", "Id", book.StoreId);
-
             return View(book);
         }
         [Authorize(Roles = "Seller")]

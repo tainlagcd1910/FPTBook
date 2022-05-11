@@ -33,7 +33,7 @@ namespace FPTBook.Controllers
             var userContext = _context.Cart.Where(c => c.UId == thisUserId).Include(c => c.Book).Include(c => c.User);
             return View(await userContext.ToListAsync());
         }
-        public async Task<IActionResult> UpdateCart(string isbn)
+        public async Task<IActionResult> Plus(string isbn)
         {
             string thisUserId = _userManager.GetUserId(HttpContext.User);
             Cart fromDb = _context.Cart.FirstOrDefault(c => c.UId == thisUserId && c.BookIsbn == isbn);
@@ -42,7 +42,7 @@ namespace FPTBook.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
-        public async Task<IActionResult> removeItem(string isbn)
+        public async Task<IActionResult> Minus(string isbn)
         {
             string thisUserId = _userManager.GetUserId(HttpContext.User);
             Cart fromDb = _context.Cart.FirstOrDefault(c => c.UId == thisUserId && c.BookIsbn == isbn);
