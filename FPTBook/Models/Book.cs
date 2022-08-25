@@ -15,6 +15,8 @@ namespace FPTBook.Models
         public string? ImgUrl { get; set; }
         public int StoreId { get; set; }
         public Store? Store { get; set; }
+
+        //public Category CategoryId { get; set; }
         public virtual ICollection<OrderDetail>? OrderDetails { get; set; }
         public virtual ICollection<Cart>? Carts { get; set; }
 
