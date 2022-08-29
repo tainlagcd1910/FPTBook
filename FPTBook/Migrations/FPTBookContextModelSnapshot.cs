@@ -102,11 +102,7 @@ namespace FPTBook.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CategoryIdId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Desc")
@@ -131,7 +127,7 @@ namespace FPTBook.Migrations
 
                     b.HasKey("Isbn");
 
-                    b.HasIndex("CategoryIdId");
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("StoreId");
 
@@ -388,9 +384,9 @@ namespace FPTBook.Migrations
 
             modelBuilder.Entity("FPTBook.Models.Book", b =>
                 {
-                    b.HasOne("FPTBook.Models.Category", "CategoryId")
+                    b.HasOne("FPTBook.Models.Category", "Category")
                         .WithMany("Books")
-                        .HasForeignKey("CategoryIdId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -400,7 +396,7 @@ namespace FPTBook.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CategoryId");
+                    b.Navigation("Category");
 
                     b.Navigation("Store");
                 });

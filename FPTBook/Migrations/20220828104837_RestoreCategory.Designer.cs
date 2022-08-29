@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FPTBook.Migrations
 {
     [DbContext(typeof(FPTBookContext))]
-    [Migration("20220509045139_addressordermanager")]
-    partial class addressordermanager
+    [Migration("20220828104837_RestoreCategory")]
+    partial class RestoreCategory
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -104,9 +104,8 @@ namespace FPTBook.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -130,6 +129,8 @@ namespace FPTBook.Migrations
 
                     b.HasKey("Isbn");
 
+                    b.HasIndex("CategoryId");
+
                     b.HasIndex("StoreId");
 
                     b.ToTable("Book");
@@ -151,6 +152,24 @@ namespace FPTBook.Migrations
                     b.HasIndex("BookIsbn");
 
                     b.ToTable("Cart");
+                });
+
+            modelBuilder.Entity("FPTBook.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("FPTBook.Models.Order", b =>
@@ -367,6 +386,10 @@ namespace FPTBook.Migrations
 
             modelBuilder.Entity("FPTBook.Models.Book", b =>
                 {
+                    b.HasOne("FPTBook.Models.Category", null)
+                        .WithMany("Books")
+                        .HasForeignKey("CategoryId");
+
                     b.HasOne("FPTBook.Models.Store", "Store")
                         .WithMany("Books")
                         .HasForeignKey("StoreId")
@@ -501,6 +524,11 @@ namespace FPTBook.Migrations
                     b.Navigation("Carts");
 
                     b.Navigation("OrderDetails");
+                });
+
+            modelBuilder.Entity("FPTBook.Models.Category", b =>
+                {
+                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("FPTBook.Models.Order", b =>
